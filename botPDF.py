@@ -98,23 +98,37 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 def main():
-    # دریافت توکن از متغیر محیطی یا مقدار مستقیم (فقط برای تست)
-    token = os.getenv("TOKEN") or "YOUR_BOT_TOKEN_HERE"
+    # دریافت توکن از متغیر محیطی
+    token = os.getenv("TOKEN")
     
-    if token == "YOUR_BOT_TOKEN_HERE":
-        print("⚠️  توجه: از توکن مستقیم استفاده می‌شود. برای محیط تولید، لطفاً از متغیر محیطی استفاده کنید.")
+    # بررسی وجود توکن
+    if not token:
+        print("❌ خطا: متغیر محیطی TOKEN تنظیم نشده است.")
+        print("لطفاً توکن ربات خود را به صورت زیر تنظیم کنید:")
+        print("1. در RENDER: به بخش Environment Variables بروید")
+        print("2. یک متغیر جدید با نام TOKEN و مقدار توکن ربات خود اضافه کنید")
+        print("3. دوباره deploy کنید")
+        return
     
-    # اضافه کردن هندلرها
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("cancel", cancel))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+    # ایجاد application خارج از بلوک try برای جلوگیری از NameError
+    app = Application.builder().token(token).build()
     
-    # اضافه کردن هندلر خطا
-    app.add_error_handler(error_handler)
+    try:
+        # اضافه کردن هندلرها
+        app.add_handler(CommandHandler("start", start))
+        app.add_handler(CommandHandler("cancel", cancel))
+        app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+        
+        # اضافه کردن هندلر خطا
+        app.add_error_handler(error_handler)
+        
+        print("✅ ربات با موفقیت راه‌اندازی شد...")
+        app.run_polling()
     
-    print("ربات در حال اجرا است...")
-    app.run_polling()
+    except Exception as e:
+        print(f"❌ خطا در راه‌اندازی ربات: {e}")
+        print("لطفاً از صحیح بودن توکن اطمینان حاصل کنید.")
 
 if __name__ == "__main__":
     main()

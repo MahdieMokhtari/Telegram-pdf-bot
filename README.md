@@ -11,4 +11,4 @@ This is a simple Telegram bot that:
 1. Clone this repository
 2. Install dependencies:
    ```bash
-   pip install -r Requirements.txt
+   pip install -r Requirments.txt

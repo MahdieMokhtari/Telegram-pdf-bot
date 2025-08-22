@@ -98,9 +98,11 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 def main():
-    # ایجاد توکن از محیط یا به صورت مستقیم (برای تست)
-    token = os.getenv("8463897398:AAFTYG-3ViOjRfuvESko9iOikiCVWT-k1dE")
-    app = Application.builder().token(os.getenv(token)).build()
+    # دریافت توکن از متغیر محیطی یا مقدار مستقیم (فقط برای تست)
+    token = os.getenv("TOKEN") or "YOUR_BOT_TOKEN_HERE"
+    
+    if token == "YOUR_BOT_TOKEN_HERE":
+        print("⚠️  توجه: از توکن مستقیم استفاده می‌شود. برای محیط تولید، لطفاً از متغیر محیطی استفاده کنید.")
     
     # اضافه کردن هندلرها
     app.add_handler(CommandHandler("start", start))
